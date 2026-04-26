@@ -1,0 +1,348 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  touch-action: none; /* prevents scroll/zoom while playing */
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Press Start 2P', monospace;
+}
+
+/* ============================================================
+   LANDSCAPE ROTATION PROMPT (portrait phones only)
+   ============================================================ */
+#rotate-msg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  text-align: center;
+}
+
+#rotate-inner {
+  padding: 24px;
+}
+
+#rotate-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  animation: rotateHint 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes rotateHint {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(90deg); }
+}
+
+#rotate-msg p {
+  font-size: 12px;
+  line-height: 2;
+  color: #fbd000;
+}
+
+/* Show rotate prompt only in portrait on small screens */
+@media (max-width: 768px) and (orientation: portrait) {
+  #rotate-msg { display: flex; }
+  #game-wrapper { display: none; }
+}
+
+/* ============================================================
+   GAME WRAPPER
+   ============================================================ */
+#game-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+}
+
+/* ============================================================
+   HUD
+   ============================================================ */
+#hud {
+  width: 100%;
+  background: #000;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 4px 8px;
+  color: #fff;
+  font-size: 9px;
+  flex-wrap: nowrap;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.hud-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.hud-label {
+  color: #fff;
+  font-size: 7px;
+}
+
+#score, #coins, #world-display, #timer, #lives {
+  color: #fff;
+  font-size: 9px;
+  min-width: 48px;
+  text-align: center;
+}
+
+/* ============================================================
+   CANVAS
+   ============================================================ */
+#gameCanvas {
+  display: block;
+  /* Fill available width, respect aspect ratio */
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: 2px solid #333;
+  border-top: none;
+  border-bottom: none;
+}
+
+/* ============================================================
+   OVERLAY
+   ============================================================ */
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+#overlay.hidden {
+  display: none;
+}
+
+#overlay-content {
+  text-align: center;
+  color: #fff;
+  padding: 20px 28px;
+  border: 4px solid #fff;
+  background: #000;
+  box-shadow: 0 0 0 8px #e52521, 0 0 0 12px #fff;
+  max-width: 90vw;
+}
+
+#overlay-title {
+  font-size: 16px;
+  color: #e52521;
+  text-shadow: 3px 3px 0 #000;
+  margin-bottom: 14px;
+  letter-spacing: 2px;
+}
+
+#overlay-sub {
+  font-size: 8px;
+  color: #fbd000;
+  margin-bottom: 20px;
+  line-height: 2;
+  white-space: pre-line;
+}
+
+#overlay-btn {
+  background: #e52521;
+  color: #fff;
+  border: 4px solid #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  padding: 14px 36px;
+  cursor: pointer;
+  transition: background 0.1s;
+  text-shadow: 2px 2px 0 #000;
+  /* Big tap target for mobile */
+  min-width: 140px;
+  min-height: 52px;
+  touch-action: manipulation;
+}
+
+#overlay-btn:active {
+  background: #fbd000;
+  color: #000;
+}
+
+/* ============================================================
+   MOBILE CONTROLS — always visible, optimised for thumbs
+   ============================================================ */
+#mobile-controls {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px 12px;
+  background: #0a0a0a;
+  border-top: 2px solid #333;
+  flex-shrink: 0;
+  /* Safe area bottom for notched phones / APK */
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
+#dpad {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#action-btns {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Base button style */
+.dpad-btn, .action-btn {
+  width: 68px;
+  height: 68px;
+  background: #2a2a2a;
+  color: #fff;
+  border: 3px solid #555;
+  border-radius: 12px;
+  font-size: 22px;
+  font-family: 'Press Start 2P', monospace;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  /* Raised 3D feel */
+  box-shadow: 0 5px 0 #111, 0 6px 6px rgba(0,0,0,0.5);
+  transition: transform 0.05s, box-shadow 0.05s, background 0.05s;
+  position: relative;
+}
+
+.dpad-btn:active, .action-btn:active {
+  background: #444;
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #111, 0 3px 3px rgba(0,0,0,0.4);
+}
+
+.btn-sub {
+  font-size: 6px;
+  color: #aaa;
+  letter-spacing: 0.5px;
+  display: block;
+}
+
+/* Action buttons — red/green Nintendo style */
+#btn-jump {
+  background: #c8192e;
+  border-color: #8c0f1e;
+  box-shadow: 0 5px 0 #5a0810, 0 6px 6px rgba(0,0,0,0.5);
+}
+#btn-jump:active {
+  background: #e52534;
+  box-shadow: 0 2px 0 #5a0810, 0 3px 3px rgba(0,0,0,0.4);
+}
+
+#btn-run {
+  background: #0b6e23;
+  border-color: #054012;
+  box-shadow: 0 5px 0 #022008, 0 6px 6px rgba(0,0,0,0.5);
+}
+#btn-run:active {
+  background: #0d9030;
+  box-shadow: 0 2px 0 #022008, 0 3px 3px rgba(0,0,0,0.4);
+}
+
+/* ============================================================
+   LANDSCAPE PHONE — tighter controls, more canvas
+   ============================================================ */
+@media (max-height: 420px) and (orientation: landscape) {
+  #hud {
+    font-size: 7px;
+    padding: 2px 6px;
+  }
+  .hud-label { font-size: 6px; }
+  #score, #coins, #world-display, #timer, #lives { font-size: 7px; min-width: 36px; }
+
+  #mobile-controls {
+    padding: 4px 12px 6px;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .dpad-btn, .action-btn {
+    width: 58px;
+    height: 58px;
+    font-size: 18px;
+    border-radius: 10px;
+  }
+}
+
+/* ============================================================
+   DESKTOP — show controls always (for debugging on desktop too)
+   ============================================================ */
+@media (min-width: 769px) {
+  #mobile-controls { display: flex; }
+  #rotate-msg { display: none !important; }
+  #game-wrapper { display: flex !important; }
+
+  #game-wrapper {
+    max-width: 800px;
+    height: auto;
+  }
+  #gameCanvas {
+    flex: none;
+    width: 100%;
+    max-width: 800px;
+  }
+}
+
+/* ============================================================
+   SCANLINE EFFECT
+   ============================================================ */
+#game-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 50;
+}
