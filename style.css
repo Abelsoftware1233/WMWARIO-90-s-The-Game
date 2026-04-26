@@ -1,9 +1,13 @@
+/* style.css */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* Voorkomt blauwe selectie vakken bij tikken op telefoon */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 body {
@@ -14,6 +18,7 @@ body {
   min-height: 100vh;
   font-family: 'Press Start 2P', monospace;
   overflow: hidden;
+  color: #fff;
 }
 
 #game-wrapper {
@@ -25,18 +30,14 @@ body {
   max-width: 800px;
 }
 
-/* HUD */
+/* HUD (Bovenbalk) */
 #hud {
   width: 100%;
   background: #000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
-  color: #fff;
-  font-size: 10px;
-  flex-wrap: wrap;
-  gap: 8px;
+  padding: 10px 16px;
 }
 
 .hud-block {
@@ -51,10 +52,8 @@ body {
   font-size: 8px;
 }
 
-#score, #coins, #world-display, #timer, #lives {
-  color: #fff;
+#score, #coins, #world-display, #timer {
   font-size: 10px;
-  min-width: 60px;
   text-align: center;
 }
 
@@ -63,20 +62,19 @@ body {
   display: block;
   width: 100%;
   max-width: 800px;
+  background: #5c94fc; /* Klassieke lucht kleur */
   image-rendering: pixelated;
-  image-rendering: crisp-edges;
   border: 3px solid #333;
-  border-top: none;
 }
 
-/* Overlay */
+/* Overlay (Start Scherm) */
 #overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.82);
+  background: rgba(0,0,0,0.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,105 +87,76 @@ body {
 
 #overlay-content {
   text-align: center;
-  color: #fff;
-  padding: 32px;
+  padding: 24px;
   border: 4px solid #fff;
   background: #000;
-  image-rendering: pixelated;
-  box-shadow: 0 0 0 8px #e52521, 0 0 0 12px #fff;
+  box-shadow: 0 0 0 8px #e52521;
 }
 
 #overlay-title {
-  font-size: 22px;
+  font-size: 18px;
   color: #e52521;
-  text-shadow: 3px 3px 0 #000;
-  margin-bottom: 20px;
-  letter-spacing: 2px;
-}
-
-#overlay-sub {
-  font-size: 10px;
-  color: #fbd000;
-  margin-bottom: 28px;
-  line-height: 1.8;
+  margin-bottom: 15px;
 }
 
 #overlay-btn {
   background: #e52521;
   color: #fff;
-  border: 4px solid #fff;
+  border: 3px solid #fff;
   font-family: 'Press Start 2P', monospace;
-  font-size: 14px;
-  padding: 12px 32px;
+  font-size: 12px;
+  padding: 10px 20px;
   cursor: pointer;
-  transition: background 0.1s;
-  text-shadow: 2px 2px 0 #000;
 }
 
-#overlay-btn:hover {
-  background: #fbd000;
-  color: #000;
-}
-
-/* Mobile controls */
+/* Mobiele Controls */
 #mobile-controls {
-  display: none;
+  display: flex; /* Altijd zichtbaar op mobiel */
   width: 100%;
   justify-content: space-between;
-  padding: 12px 24px;
+  padding: 20px 10px;
   background: #111;
+  border-top: 2px solid #333;
 }
 
-#dpad {
+#dpad, #action-btns {
   display: flex;
-  gap: 10px;
-}
-
-#action-btns {
-  display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .dpad-btn, .action-btn {
-  width: 52px;
-  height: 52px;
-  background: #333;
+  width: 65px;
+  height: 65px;
+  background: #222;
   color: #fff;
-  border: 3px solid #555;
-  border-radius: 8px;
-  font-size: 18px;
-  font-family: 'Press Start 2P', monospace;
-  cursor: pointer;
+  border: 4px solid #444;
+  border-radius: 50%; /* Ronde knoppen voor betere grip */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
   user-select: none;
-  -webkit-user-select: none;
-  active: background: #555;
+  font-weight: bold;
+}
+
+/* Specifieke kleuren voor actie knoppen */
+#btn-run {
+  background: #fbd000; /* Geel */
+  color: #000;
+  border-color: #d4ae00;
+}
+
+#btn-jump {
+  background: #e52521; /* Rood */
+  border-color: #b01a17;
 }
 
 .dpad-btn:active, .action-btn:active {
-  background: #555;
-  transform: scale(0.95);
+  transform: scale(0.9);
+  filter: brightness(1.2);
 }
 
-.action-btn {
-  background: #e52521;
-  border-color: #c01a17;
-  font-size: 14px;
-}
-
-@media (max-width: 600px) {
-  #hud {
-    font-size: 8px;
-    padding: 6px 8px;
-  }
-  #mobile-controls {
-    display: flex;
-  }
-  #overlay-title {
-    font-size: 14px;
-  }
-}
-
-/* Scanline effect overlay */
+/* Scanline effect */
 #game-wrapper::after {
   content: '';
   position: absolute;
@@ -196,9 +165,14 @@ body {
     0deg,
     transparent,
     transparent 2px,
-    rgba(0,0,0,0.03) 2px,
-    rgba(0,0,0,0.03) 4px
+    rgba(0,0,0,0.05) 2px,
+    rgba(0,0,0,0.05) 4px
   );
   pointer-events: none;
   z-index: 50;
+}
+
+/* Verberg controls op grote desktop schermen als je dat wilt */
+@media (min-width: 1024px) {
+  /* #mobile-controls { display: none; } */
 }
