@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Mario Bros</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-wrapper">
+    <div id="hud">
+      <div class="hud-block">
+        <span class="hud-label">MARIO</span>
+        <span id="score">000000</span>
+      </div>
+      <div class="hud-block">
+        <span class="hud-label">🍄</span>
+        <span id="coins">×00</span>
+      </div>
+      <div class="hud-block">
+        <span class="hud-label">WORLD</span>
+        <span id="world-display">1-1</span>
+      </div>
+      <div class="hud-block">
+        <span class="hud-label">TIME</span>
+        <span id="timer">400</span>
+      </div>
+      <div class="hud-block">
+        <span class="hud-label">LIVES</span>
+        <span id="lives">×03</span>
+      </div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="overlay" class="hidden">
+      <div id="overlay-content">
+        <div id="overlay-title"></div>
+        <div id="overlay-sub"></div>
+        <button id="overlay-btn">PLAY</button>
+      </div>
+    </div>
+    <div id="mobile-controls">
+      <div id="dpad">
+        <button class="dpad-btn" id="btn-left">◄</button>
+        <button class="dpad-btn" id="btn-right">►</button>
+      </div>
+      <div id="action-btns">
+        <button class="action-btn" id="btn-jump">B</button>
+        <button class="action-btn" id="btn-run">A</button>
+      </div>
+    </div>
+  </div>
+  <script src="mario.js"></script>
+</body>
+</html>
